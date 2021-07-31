@@ -31,7 +31,7 @@ const YaziDetayi = (props) => {
             api().get(`/posts/${id}/comments`),
         ]).then(responses => {
             setYaziDetayi(responses[0].data);
-            setYorumlar(responses[1].data)
+            setYorumlar(responses[1].data);
         }).catch((error) => {
             console.log(error);
         })

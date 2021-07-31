@@ -2,11 +2,11 @@ import axios from "axios";
 
 export function api() {
     return axios.create({
-        baseURL: "http://localhost:3002",
+        baseURL: "https://harmini-genclik-backend.herokuapp.com",
     })
 } 
 
 //  api().get('/post')
 //  api().post('/post')
-// axios.get(`http://localhost:3002/posts`)
-// axios.post(`http://localhost:3002/posts`)
+// axios.get(`https://harmini-genclik-backend.herokuapp.com`)
+// axios.post(`https://harmini-genclik-backend.herokuapp.com`)

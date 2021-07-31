@@ -1,12 +1,12 @@
 import YaziListesi from './Components/YaziListesi';
 import YaziDetayi from './Components/YaziDetayi';
-import { BrowserRouter as Router , Route}  from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import YaziEkle from './Components/YaziEkle';
 import YaziDuzenle from './Components/YaziDuzenle';
 
 
 function App() {
-  
+
   return (
     <Router>
       <div className="main_wapper">
@@ -19,7 +19,7 @@ function App() {
         </div>
       </div>
     </Router>
- 
+
   );
 }
 

@@ -11,7 +11,7 @@ const YaziDuzenle = (props) => {
     useEffect(() => {
         api().get(`posts/${id}`)
             .then(rsp => {
-                setYazi({ title: rsp.data.title, content: rsp.data.content, date: rsp.data.date });
+                setYazi({ title: rsp.data.title, content: rsp.data.content });
             })
     }, [id])
     return (
