@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { api } from '../api';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import YaziFormu from './YaziFormu';
 
 
-const YaziDuzenle = (props) => {
-    const { id } = props.match.params;
+const YaziDuzenle = () => {
+    const { id } = useParams;
 
-    const [yazi, setYazi] = useState({});
-
-    useEffect(() => {
-        api().get(`posts/${id}`)
-            .then(rsp => {
-                setYazi({ title: rsp.data.title, content: rsp.data.content });
-            })
-    }, [id])
+    const yazi = useSelector(state => state.yaziDetayi)
+    /* 
+        useEffect(() => {
+            api().get(`posts/${id}`)
+                .then(rsp => {
+                    setYazi({ title: rsp.data.title, content: rsp.data.content });
+                })
+        }, []) */
     return (
         <div>
             <h2>Yazı Düzenleme Formu</h2>

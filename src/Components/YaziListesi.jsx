@@ -1,32 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { api } from '../api';
+import { yaziListesiGetir } from '../actions';
 
 const YaziListesi = () => {
 
-    const [yaziListesi, setYaziListesi] = useState([]);
+    const yaziListesi = useSelector((state) => state.yaziListesi)
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        api()
-            .get('/posts')
-            .then((response) => {
-                setYaziListesi(response.data);
-            })
+        dispatch(yaziListesiGetir());
     }, []);
+
     return (
         <div className="ui relaxed divided list">
-            <Link to="/yaziekle" className="ui primary button">
+            <Link style={{ marginBottom: 10 }} to="/yaziekle" className="ui primary button ">
                 Yazı Ekle
             </Link>
-            <br />
-            <br />
-
             {
-
                 yaziListesi.map((yazi) => {
                     return (
                         <div key={yazi.id} className="item">
-
                             <i className="large github middle aligned icon"></i>
                             <div className="content">
                                 <Link to={`/posts/${yazi.id}`} className="header">{yazi.title}</Link>

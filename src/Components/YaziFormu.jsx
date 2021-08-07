@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { api } from '../api';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { yaziDüzenle, yaziEkle } from '../actions';
+
+
 
 const YaziFormu = (props) => {
     const [hata, setHata] = useState(false);
-    const [yazi, setYazi] = useState({ title: "", content: "" })
+    const [yazi, setYazi] = useState({ title: "", content: "" });
     const [adres, setAdres] = useState("");
 
-
+    const { id } = useParams();
+    const history = useHistory();
+    const dispatch = useDispatch();
 
     const onInputChange = (e) => {
         setYazi({ ...yazi, [e.target.name]: e.target.value })
@@ -19,34 +25,23 @@ const YaziFormu = (props) => {
         } else {
             setHata(false);
             if (props.yazi?.title) {
-                // edit işlemi 
-                api()
-                    .put(`/posts/${props.match.params.id}`, yazi)
-                    .then(rsp => {
-                        props.history.push(`/posts/${props.match.params.id}`);
-                    }).catch((error) => {
-                        console.log(error)
-                    })
+                // pust işlemi
+                dispatch(yaziDüzenle(id, yazi, history.push));
             } else {
                 //add işlemi
-                api()
-                    .post(`/posts`, yazi)
-                    .then((response) => {
-                        props.history.push('/');
-                    }).catch((error) => {
-                        console.log(error);
-                    })
+                dispatch(yaziEkle(yazi, history.push));
             }
 
         }
     }
 
     useEffect(() => {
-        if (props.yazi?.title && props.yazi.content) setYazi(props.yazi)
+        if (props.yazi?.title && props.yazi.content)
+            setYazi({ title: props.yazi.title, content: props.yazi.content })
     }, [props.yazi])
 
     const vote = () => {
-        if (props.yazi?.title) { setAdres(`/posts/${props.match.params.id}`) }
+        if (props.yazi?.title) { setAdres(`/posts/${id}`) }
         else { setAdres(`/`) }
         return adres;
     }
@@ -77,11 +72,10 @@ const YaziFormu = (props) => {
                 <button onClick={Yazidegerleri} className="ui primary button"> Gönder</button>
                 <Link to={vote} className="ui button">İptal Et</Link>
             </div>
-
         </>
 
     );
 }
 
 
-export default withRouter(YaziFormu);
+export default YaziFormu;

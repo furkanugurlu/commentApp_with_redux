@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'semantic-ui-react';
-import { api } from '../api';
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom';
+import { yaziSil } from '../actions';
 
-const SilModal = ({ yazi, push }) => {
+
+const SilModal = ({ yazi }) => {
+
     const [open, setOpen] = useState(false);
     const show = () => setOpen(true);
     const close = () => setOpen(false);
 
+    const { push } = useHistory();
+    const dispatch = useDispatch();
+
     const handleDelete = (id) => {
-        api().delete(`/posts/${id}`)
-            .then(() => {
-                close();
-                push(`/`);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+        dispatch(yaziSil(id, close, push))
     }
 
     return (

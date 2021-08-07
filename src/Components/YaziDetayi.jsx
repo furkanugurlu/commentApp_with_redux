@@ -1,64 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { api } from '../api';
-import axios from 'axios';
+import React, { useEffect } from 'react';
 
 import YaziYorumlari from './YaziYorumları';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import SilModal from './SilModal';
+import { yaziGetir, yorumEkle } from '../actions';
+import { useDispatch, useSelector } from 'react-redux';
 
-const YaziDetayi = (props) => {
+const YaziDetayi = () => {
 
-    const [yaziDetayi, setYaziDetayi] = useState({});
-    const [yorumlar, setYorumlar] = useState([]);
-    const { id } = props.match.params;
+    const dispatch = useDispatch();
+    const yazi_Detayi = useSelector(state => state.yaziDetayi);
+
+    const history = useHistory();
+    const { id } = useParams();
 
     const handleCommentSubmit = (e, yorum) => {
-        //     setYorum(YORUM_BASLANGIC);
         e.preventDefault();
-        api().post(`/posts/${id}/comments`, yorum)
-            .then((respons) => {
-                setYorumlar([...yorumlar, respons.data]);
-            }).catch((error) => {
-                console.log(error);
-            })
+        dispatch(yorumEkle(id, yorum));
     }
 
-
-
     useEffect(() => {
-        axios.all([
-            api().get(`/posts/${id}`),
-            api().get(`/posts/${id}/comments`),
-        ]).then(responses => {
-            setYaziDetayi(responses[0].data);
-            setYorumlar(responses[1].data);
-        }).catch((error) => {
-            console.log(error);
-        })
-
-        /*   axios.get(`http://localhost:3002/posts/${id}`).
-          then(rsp =>{
-              setYaziDetayi(rsp.data);
-          });
-          axios.get(`http://localhost:3002/posts/${id}/comments`).
-          then((response) =>{
-              setYorumlar(response.data)
-          }) */
-
-    }, [id]);
+        dispatch(yaziGetir(id));
+    }, []);
 
     return (
         <>
-            <h2 className="ui header">{yaziDetayi.title}</h2>
-            <p>{yaziDetayi.created_at}</p>
-            <div className="ui buttons">
-                <Link className="ui blue button" to={`/posts/${yaziDetayi.id}/edit`}>Düzenle</Link>
-                <SilModal yazi={yaziDetayi} push={props.history.push} />
+            <h2 className="ui header">{yazi_Detayi.title}</h2>
+            <p>{yazi_Detayi.created_at}</p>
+            <div style={{ marginBottom: 10 }} className="ui buttons">
+                <Link className="ui blue button" to={`/posts/${yazi_Detayi.id}/edit`}>Düzenle</Link>
+                <SilModal yazi={yazi_Detayi} />
             </div>
-            <br />
-            <br />
-            <p> {yaziDetayi.content}</p>
-            <YaziYorumlari yorumlar={yorumlar} handleSubmit={handleCommentSubmit} />
+            <p> {yazi_Detayi.content}</p>
+            <YaziYorumlari yorumlar={yazi_Detayi.yorumlar} handleSubmit={handleCommentSubmit} />
+
+            <div className="ui grid">
+                <div className="four column row">
+                    <div className="right floated column">
+                        <Link to="/" className="ui red button" type="submit">Geri</Link>
+                    </div>
+                </div>
+            </div>
+
         </>
     );
 }
